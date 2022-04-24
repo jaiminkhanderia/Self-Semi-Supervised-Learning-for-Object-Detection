@@ -28,7 +28,11 @@ def get_model(num_classes):
     model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=False, pretrained_backbone=False)
 
     #model = torchvision.models.resnet50(pretrained = False)
-    checkpoint = torch.load('path')
+    checkpoint = torch.load('./resnet50.pth')
+    for key in list(checkpoint.keys()):
+        if "num_batches_tracked" not in key:
+            checkpoint["backbone.body." + key] = checkpoint[key]
+            del checkpoint[key]
     model.load_state_dict(checkpoint)
 
     # get number of input features for the classifier
@@ -49,21 +53,31 @@ def main():
     valid_loader = torch.utils.data.DataLoader(valid_dataset, batch_size=2, shuffle=False, num_workers=2, collate_fn=utils.collate_fn)
 
     model = get_model(num_classes)
+    print("get model done!")
     model.to(device)
 
     params = [p for p in model.parameters() if p.requires_grad]
     optimizer = torch.optim.SGD(params, lr=0.005, momentum=0.9, weight_decay=0.0005)
     lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=3, gamma=0.1)
 
-    num_epochs = 1
-
+    num_epochs = 3
+    print("starting !")
     for epoch in range(num_epochs):
         # train for one epoch, printing every 10 iterations
+        print("calling train epoch one..")
         train_one_epoch(model, optimizer, train_loader, device, epoch, print_freq=10)
+        print("epoch done!! ", epoch)
         # update the learning rate
         lr_scheduler.step()
+        state = dict(
+            epoch=epoch + 1,
+            model=model.state_dict(),
+            optimizer=optimizer.state_dict(),
+        )
+        torch.save(state, "./fine_tune.pth")
         # evaluate on the test dataset
-        evaluate(model, valid_loader, device=device)
+        if epoch % 2 == 0:
+            evaluate(model, valid_loader, device=device)
 
     print("That's it!")
 
