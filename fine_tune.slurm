@@ -38,4 +38,4 @@ singularity exec --nv \
 /bin/bash -c "
 source /ext3/env.sh
 conda activate
-python fine_tune1.py
+python fine_tune.py
