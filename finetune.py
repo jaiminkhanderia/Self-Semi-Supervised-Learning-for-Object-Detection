@@ -116,7 +116,7 @@ def main(args):
     valid_loader = torch.utils.data.DataLoader(valid_dataset, batch_size=per_device_batch_size, num_workers=args.num_workers, 
                                                pin_memory=True, sampler=train_sampler, collate_fn=collate_fn)
     
-    model = get_model(num_classes).cuda(gpu)
+    model = get_model(args, num_classes).cuda(gpu)
     model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[gpu])
 
     params = [p for p in model.parameters() if p.requires_grad]
