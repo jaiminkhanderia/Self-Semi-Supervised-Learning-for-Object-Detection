@@ -17,8 +17,8 @@
 #SBATCH --cpus-per-task=24
 
 #SBATCH --time=02:00:00
-#SBATCH --output=ft_%j.out
-#SBATCH --error=ft_%j.err
+#SBATCH --output=finetune_%j.out
+#SBATCH --error=finetune_%j.err
 #SBATCH --exclusive
 #SBATCH --requeue
 
@@ -38,5 +38,5 @@ singularity exec --nv \
 /bin/bash -c "
 source /ext3/env.sh
 conda activate
-python fine_tune.py
+python -m torch.distributed.launch --nproc_per_node=4 finetune.py --exp-dir /home/jk7178/finetune_run_04_24_2022_20_00 --epochs 20 --batch-size 8 --lr 0.005 --wd 0.0005 --momentum 0.9
 "

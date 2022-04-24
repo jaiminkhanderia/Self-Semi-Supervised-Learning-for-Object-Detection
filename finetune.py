@@ -17,10 +17,6 @@ from utils import init_distributed_mode, collate_fn
 def get_arguments():
     parser = argparse.ArgumentParser(description="Finetune FasterRCNN", add_help=False)
 
-    # Data
-    parser.add_argument("--data-dir", type=Path, default="/path/to/imagenet", required=True,
-                        help='Path to the image net dataset')
-
     # Checkpoints
     parser.add_argument("--exp-dir", type=Path, default="./exp",
                         help='Path to the experiment folder, where all logs/checkpoints will be stored')
