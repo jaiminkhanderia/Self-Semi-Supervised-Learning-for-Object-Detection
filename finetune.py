@@ -105,7 +105,7 @@ def main(args):
         print(" ".join(sys.argv))
         print(" ".join(sys.argv), file=stats_file)
     
-    num_classes = 100
+    num_classes = 101
     train_dataset = LabeledDataset(root='/labeled', split="training", transforms=get_transform(train=True))
     train_sampler = torch.utils.data.distributed.DistributedSampler(train_dataset, shuffle=True)
     per_device_batch_size = args.batch_size // args.world_size
