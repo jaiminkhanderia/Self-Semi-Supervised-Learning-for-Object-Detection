@@ -77,7 +77,7 @@ def get_model(args, num_classes):
 
 def train(args, model, optimizer, lr_scheduler, train_loader, valid_loader, device, start_epoch, stats_file):
     start_time = last_logging_time = time.time()
-    for epoch in range(start_epoch, args.epoch):
+    for epoch in range(start_epoch, args.epochs):
         train_one_epoch(args, model, optimizer, train_loader, device, epoch, stats_file, start_time, last_logging_time, print_freq=1)
         lr_scheduler.step()
 
