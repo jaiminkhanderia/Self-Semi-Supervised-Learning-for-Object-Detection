@@ -114,7 +114,7 @@ def main(args):
     valid_dataset = LabeledDataset(root='/labeled', split="validation", transforms=get_transform(train=False))
     valid_sampler = torch.utils.data.distributed.DistributedSampler(valid_dataset, shuffle=True)
     valid_loader = torch.utils.data.DataLoader(valid_dataset, batch_size=per_device_batch_size, num_workers=args.num_workers, 
-                                               pin_memory=True, sampler=train_sampler, collate_fn=collate_fn)
+                                               pin_memory=True, sampler=valid_sampler, collate_fn=collate_fn)
     
     model = get_model(args, num_classes).cuda(gpu)
     model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[gpu])
