@@ -52,7 +52,7 @@ def get_model(args, num_classes):
     model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes)
     
     checkpoint = torch.load(args.ckpt_dir / 'model.pth')
-    model.load_state_dict(checkpoint, strict=False)
+    model.load_state_dict(checkpoint["model"], strict=False)
 
     return model
 
