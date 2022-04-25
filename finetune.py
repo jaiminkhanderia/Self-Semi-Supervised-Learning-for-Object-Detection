@@ -66,7 +66,7 @@ def get_model(args, num_classes):
         if "num_batches_tracked" not in key:
             checkpoint["backbone.body." + key] = checkpoint[key]
             del checkpoint[key]
-    model.load_state_dict(checkpoint)
+    model.load_state_dict(checkpoint, strict=False)
 
     # get number of input features for the classifier
     in_features = model.roi_heads.box_predictor.cls_score.in_features
