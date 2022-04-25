@@ -98,7 +98,7 @@ def main(args):
     print(args)
     gpu = torch.device(args.device)
 
-    stats_file = open(args.exp_dir / "stats.txt", "r", buffering=1)
+    stats_file = open(args.exp_dir / "stats.txt", "w", buffering=1)
     if args.rank == 0:
         args.exp_dir.mkdir(parents=True, exist_ok=True)
         stats_file = open(args.exp_dir / "stats.txt", "a", buffering=1)
