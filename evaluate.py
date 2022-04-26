@@ -52,7 +52,7 @@ def get_model(args, num_classes):
     model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes)
     
     checkpoint = torch.load(args.ckpt_dir / 'model.pth')
-    for key in list(checkpoint.keys()):
+    for key in list(checkpoint["model"].keys()):
         if "module" in key:
             new_key = key.split("module.")[1]
             checkpoint[new_key] = checkpoint[key]
