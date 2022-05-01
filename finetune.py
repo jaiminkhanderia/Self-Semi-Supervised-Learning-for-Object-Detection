@@ -141,6 +141,8 @@ def main(args):
         start_epoch = ckpt["epoch"]
         model.load_state_dict(ckpt["model"])
         optimizer.load_state_dict(ckpt["optimizer"])
+        for param_group in optimizer.param_groups:
+            param_group["lr"] = args.lr
     else:
         start_epoch = 0
 
