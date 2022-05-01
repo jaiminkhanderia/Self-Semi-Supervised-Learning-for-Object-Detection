@@ -68,7 +68,7 @@ def get_model(args, num_classes):
     checkpoint = torch.load(args.exp_dir / 'bt_model.pth')
     for key in list(checkpoint["model"].keys()):
         new_key = key.split("module.")[1]
-        checkpoint["model"][new_key] = checkpoint[key]
+        checkpoint["model"][new_key] = checkpoint["model"][key]
         del checkpoint["model"][key]
     model.load_state_dict(checkpoint["model"], strict=False)
 
