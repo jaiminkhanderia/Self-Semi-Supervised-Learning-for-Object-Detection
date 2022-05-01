@@ -50,6 +50,10 @@ def get_arguments():
     return parser
 
 
+def exclude_bias_and_norm(p):
+    return p.ndim == 1
+
+
 def get_transform(train):
     transforms = []
     transforms.append(T.ToTensor())
@@ -66,7 +70,7 @@ def get_model(args, num_classes):
         new_key = key.split("module.")[1]
         checkpoint["model"][new_key] = checkpoint[key]
         del checkpoint["model"][key]
-    model.load_state_dict(checkpoint, strict=False)
+    model.load_state_dict(checkpoint["model"], strict=False)
 
     # get number of input features for the classifier
     in_features = model.roi_heads.box_predictor.cls_score.in_features
