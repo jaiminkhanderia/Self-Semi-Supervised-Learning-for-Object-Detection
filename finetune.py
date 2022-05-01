@@ -24,6 +24,8 @@ def get_arguments():
                         help='Print logs to the stats.txt file every [log-freq-time] seconds')
 
     # Optim
+    parser.add_argument('--freeze', default=False, action=argparse.BooleanOptionalAction,
+                        help="Flag to freeze backbone layers")
     parser.add_argument("--epochs", type=int, default=20,
                         help='Number of epochs')
     parser.add_argument("--batch-size", type=int, default=8,
@@ -119,6 +121,14 @@ def main(args):
     
     model = get_model(args, num_classes).cuda(gpu)
     model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[gpu])
+
+    if args.freeze:
+        # Freeze backbone
+        for name, param in model.named_parameters():
+            if "backbone" in name:
+                param.requires_grad = False
+            else:
+                print(name)
 
     params = [p for p in model.parameters() if p.requires_grad]
     optimizer = torch.optim.SGD(params, lr=args.lr, momentum=args.momentum, weight_decay=args.wd)
