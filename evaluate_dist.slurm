@@ -4,19 +4,19 @@
 #SBATCH --account=csci_ga_2572_2022sp_09
 
 ## change the partition number to use different number of GPUs
-#SBATCH --partition=n1s8-v100-1
-#SBATCH --gres=gpu:1
-#SBATCH --cpus-per-task=8
+##SBATCH --partition=n1s8-v100-1
+##SBATCH --gres=gpu:1
+##SBATCH --cpus-per-task=8
 
 ##SBATCH --partition=n1s16-v100-2
 ##SBATCH --gres=gpu:2
 ##SBATCH --cpus-per-task=16
 
-##SBATCH --partition=n1c24m128-v100-4
-##SBATCH --gres=gpu:4
-##SBATCH --cpus-per-task=24
+#SBATCH --partition=n1c24m128-v100-4
+#SBATCH --gres=gpu:4
+#SBATCH --cpus-per-task=24
 
-#SBATCH --time=02:00:00
+#SBATCH --time=01:00:00
 #SBATCH --output=evaluate_%j.out
 #SBATCH --error=evaluate_%j.err
 #SBATCH --exclusive
@@ -38,5 +38,5 @@ singularity exec --nv \
 /bin/bash -c "
 source /ext3/env.sh
 conda activate
-python evaluate.py --ckpt-dir /home/jk7178/finetune_run_04_25_2022_18_00 --batch-size 8
+python -m torch.distributed.launch --nproc_per_node=4 evaluate.py --ckpt-dir /home/jk7178/finetune_run_04_25_2022_18_00 --batch-size 8
 "
